@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EaaP Marketplace</title>
+    <link rel="stylesheet" href="templatemo-electric-xtra.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.development.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.20.6/Babel.min.js"></script>
+    <script src="templatemo-electric-scripts.js" defer></script>
+    <style>
+        /* Sidebar styles */
+        #sidebar {
+            transform: translateX(0);
+            transition: transform 0.3s ease-in-out;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            z-index: 1000;
+            background: #1a1a1a;
+            width: 250px;
+        }
+        #sidebar.closed {
+            transform: translateX(-100%);
+        }
+        .sidebar-container {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .close-button {
+            align-self: flex-end;
+            cursor: pointer;
+        }
+        .close-button span {
+            display: block;
+            background: #FF5E00;
+            height: 3px;
+            width: 20px;
+            margin-bottom: 5px;
+            transition: transform 0.3s ease;
+        }
+        .close-button span:first-child {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        .close-button span:last-child {
+            transform: rotate(-45deg);
+        }
+        .sidebar-logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+        }
+        .logo-svg {
+            width: 60px;
+            height: 60px;
+        }
+        .logo-text {
+            color: #FF5E00;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            margin-top: 10px;
+        }
+        .sidebar-links {
+            list-style: none;
+            padding: 0;
+            width: 100%;
+            text-align: center;
+        }
+        .sidebar-links li {
+            margin: 10px 0;
+        }
+        .nav-link {
+            color: #00B2FF;
+            text-decoration: none;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.1rem;
+        }
+        .nav-link:hover {
+            color: #FF5E00;
+        }
+        .menu-toggle {
+            display: block;
+            cursor: pointer;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1100;
+            width: 30px;
+            height: 20px;
+        }
+        .menu-toggle span {
+            display: block;
+            background: #FF5E00;
+            height: 3px;
+            margin-bottom: 5px;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        .menu-toggle span:nth-child(2) {
+            width: 80%;
+        }
+        .menu-toggle span:nth-child(3) {
+            width: 60%;
+        }
+        /* Text rotator styles */
+        .text-rotator {
+            position: relative;
+            height: 200px;
+        }
+        .text-set {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .text-set.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .glitch-text {
+            font-size: 3rem;
+            font-family: 'Orbitron', sans-serif;
+            white-space: nowrap;
+        }
+        /* Hexagon styles for about-graphic-alt */
+        .about-graphic-alt {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .about-graphic-alt .hexagon {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            background: #FF5E00;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            animation: rotate 10s linear infinite;
+        }
+        .about-graphic-alt .hexagon:nth-child(2) {
+            background: #00B2FF;
+            transform: scale(0.7) rotate(30deg);
+            animation-direction: reverse;
+        }
+        .about-graphic-alt .hexagon:nth-child(3) {
+            background: #FF5E00;
+            transform: scale(0.5) rotate(-30deg);
+        }
+        @keyframes rotate {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        /* ElectricBorder styles */
+        .electric-border {
+            --electric-light-color: oklch(from var(--electric-border-color) l c h);
+            --eb-border-width: 2px;
+            position: relative;
+            border-radius: inherit;
+            overflow: visible;
+            isolation: isolate;
+        }
+        .eb-svg {
+            position: fixed;
+            left: -10000px;
+            top: -10000px;
+            width: 10px;
+            height: 10px;
+            opacity: 0.001;
+            pointer-events: none;
+        }
+        .eb-content {
+            position: relative;
+            border-radius: inherit;
+            z-index: 1;
+        }
+        .eb-layers {
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .eb-stroke,
+        .eb-glow-1,
+        .eb-glow-2,
+        .eb-background-glow {
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            pointer-events: none;
+            box-sizing: border-box;
+        }
+        .eb-stroke {
+            border: var(--eb-border-width) solid var(--electric-border-color);
+        }
+        .eb-glow-1 {
+            border: var(--eb-border-width) solid oklch(from var(--electric-border-color) l c h / 0.6);
+            opacity: 0.5;
+            filter: blur(calc(0.5px + (var(--eb-border-width) * 0.25)));
+        }
+        .eb-glow-2 {
+            border: var(--eb-border-width) solid var(--electric-light-color);
+            opacity: 0.5;
+            filter: blur(calc(2px + (var(--eb-border-width) * 0.5)));
+        }
+        .eb-background-glow {
+            z-index: -1;
+            transform: scale(1.08);
+            filter: blur(32px);
+            opacity: 0.3;
+            background: linear-gradient(-30deg, var(--electric-light-color), transparent, var(--electric-border-color));
+        }
+        /* Session card styles */
+        .session-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .session-card {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            background-size: cover;
+            background-position: center;
+            color: white;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        .session-card-content {
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 0 0 8px 8px;
+        }
+        .session-card h3 {
+            margin: 0 0 0.5rem;
+            font-size: 1.5rem;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .session-card p {
+            margin: 0 0 1rem;
+            font-size: 1rem;
+        }
+        .book-button {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: #FF5E00;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        .book-button:hover {
+            background: #00B2FF;
+        }
+        .fallback-message {
+            color: #FF5E00;
+            font-family: 'Rajdhani', sans-serif;
+            text-align: center;
+            padding: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+    <div class="shapes-container">
+        <div class="shape shape-circle"></div>
+        <div class="shape shape-triangle"></div>
+        <div class="shape shape-square"></div>
+    </div>
+    <div class="gradient-overlay"></div>
+    <div class="scanlines"></div>
+    <div id="particles"></div>
+
+    <nav id="sidebar" class="closed">
+        <div class="sidebar-container">
+            <div class="close-button" id="closeButton">
+                <span></span>
+                <span></span>
+            </div>
+            <div class="sidebar-logo">
+                <a href="#home" class="logo-link">
+                    <svg class="logo-svg" viewBox="0 0 100 100">
+                        <path fill="#FF5E00" d="M50,10 L90,90 H10 Z" />
+                        <path fill="#00B2FF" d="M50,30 L70,70 H30 Z" />
+                    </svg>
+                    <span class="logo-text">EaaP Marketplace</span>
+                </a>
+            </div>
+            <ul class="sidebar-links" id="sidebarLinks">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="experience.html" class="nav-link">Experiences</a></li>
+                <li><a href="create.html" class="nav-link">Add Experience</a></li>
+                <li><a href="" class="nav-link">AI Insights</a></li>
+                <li><a href="profile.html" class="nav-link active">Profile</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+                <li><a href="" class="nav-link">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="menu-toggle" id="menuToggle">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <main class="main-content">
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <div class="text-rotator">
+                    <div class="text-set active">
+                        <h1 class="glitch-text" data-text="THE FUTURE IS HERE">THE FUTURE IS HERE</h1>
+                        <p class="subtitle">Discover curated experiences — adventure, learning, wellness, mentorship and more.</p>
+                    </div>
+                    <div class="text-set">
+                        <h1 class="glitch-text" data-text="TURN MOMENTS INTO MEMORIES">TURN MOMENTS INTO MEMORIES</h1>
+                        <p class="subtitle">Discover curated experiences — adventure, learning, wellness, mentorship and more.</p>
+                    </div>
+                    <div class="text-set">
+                        <h1 class="glitch-text" data-text="BOOK. EXPERIENCE. SHARE.">BOOK. EXPERIENCE. SHARE.</h1>
+                        <p class="subtitle">Discover curated experiences — adventure, learning, wellness, mentorship and more.</p>
+                    </div>
+                    <div class="text-set">
+                        <h1 class="glitch-text" data-text="ELEVATE EVERY EXPERIENCE">ELEVATE EVERY EXPERIENCE</h1>
+                        <p class="subtitle">Discover curated experiences — adventure, learning, wellness, mentorship and more.</p>
+                    </div>
+                </div>
+                <div class="cta-container">
+                    <a href="#experiences" class="cta-button cta-primary">Get Started</a>
+                    <a href="#about" class="cta-button cta-secondary">Learn More</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="experiences" class="features">
+            <h2 class="section-title">What We Offer</h2>
+            <div id="session-grid">
+                <div class="fallback-message">Loading experiences... If this persists, please check the console for errors.</div>
+            </div>
+        </section>
+
+        <section id="about" class="about">
+            <h2 class="section-title">About EaaP Marketplace</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>We turn skills into bookable moments</h2>
+                    <p>EaaP Marketplace transforms local skills, passions and moments into bookable experiences. Hosts list time-bound, location-aware experiences (workshops, tours, mentorship sessions, events) and guests book them like products — simple, secure and social.</p>
+                    <p>Powered by smart booking, AI recommendations and trust-first profiles, EaaP makes it effortless to find experiences that match your vibe, budget and schedule. Whether you're exploring a new hobby or booking a private mentorship, EaaP connects you with authentic hosts.</p>
+                </div>
+                <div class="about-visual">
+                    <div class="about-graphic"></div>
+                </div>
+            </div>
+            <div class="about-content">
+                <div class="about-visual">
+                    <div class="about-graphic-alt">
+                        <div class="hexagon"></div>
+                        <div class="hexagon"></div>
+                        <div class="hexagon"></div>
+                    </div>
+                </div>
+                <div class="about-text">
+                    <h2>Innovation at Every Level</h2>
+                    <p>Our commitment to excellence drives us to push boundaries and challenge conventions. With a team of world-class engineers, designers, and visionaries, we're creating solutions that not only meet today's needs but anticipate tomorrow's challenges.</p>
+                    <p>From quantum computing to neural networks, from blockchain to AI, we're at the forefront of every technological revolution. Our integrated approach ensures that each innovation builds upon the last, creating a synergy that amplifies our impact.</p>
+                    <p>Experience the power of true digital transformation. With EaaP Marketplace, you're not just adopting technology – you're embracing a philosophy of continuous evolution and limitless possibility.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="contact">
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="contact-container">
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" id="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <input type="text" id="subject" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" required></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">Send Message</button>
+                    </form>
+                </div>
+                <div class="contact-info">
+                    <h3>Connect With Us</h3>
+                    <div class="info-item">
+                        <div class="info-icon">📧</div>
+                        <div class="info-details">
+                            <h4>Email</h4>
+                            <p>hello@eaap.market</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">📱</div>
+                        <div class="info-details">
+                            <h4>Phone</h4>
+                            <p>+91 98765 43210</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">📍</div>
+                        <div class="info-details">
+                            <h4>Location</h4>
+                            <p>Hybrid — Online & Local Experiences</p>
+                        </div>
+                    </div>
+                    <div class="map-container">
+                        <div class="map-overlay"></div>
+                        <div class="map-placeholder">Interactive Map<br>Neo Tokyo, Sector 7</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Careers</a>
+            </div>
+            <div class="copyright">
+                © 2025 EaaP Marketplace. All rights reserved. Built for unforgettable moments. | Template: <a href="https://templatemo.com">TemplateMo</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Sidebar toggle functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('menuToggle');
+            const closeButton = document.getElementById('closeButton');
+
+            if (!sidebar || !menuToggle || !closeButton) {
+                console.error('Sidebar elements not found:', { sidebar, menuToggle, closeButton });
+                return;
+            }
+
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('closed');
+                console.log('Menu toggle clicked, sidebar closed:', sidebar.classList.contains('closed'));
+            });
+
+            closeButton.addEventListener('click', () => {
+                sidebar.classList.add('closed');
+                console.log('Close button clicked, sidebar closed');
+            });
+
+            console.log('Sidebar event listeners set up successfully');
+        });
+
+        // Text rotator functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const textSets = document.querySelectorAll('.text-set');
+            let currentText = 0;
+
+            function rotateText() {
+                textSets.forEach((set, index) => {
+                    set.classList.remove('active');
+                    if (index === currentText) {
+                        set.classList.add('active');
+                    }
+                });
+                currentText = (currentText + 1) % textSets.length;
+            }
+
+            rotateText();
+            setInterval(rotateText, 3000); // Rotate every 3 seconds
+        });
+    </script>
+
+    <script type="text/babel">
+        // Check if React and ReactDOM are loaded
+        if (typeof React === 'undefined' || typeof ReactDOM === 'undefined') {
+            console.error('React or ReactDOM failed to load. Please check the CDN links.');
+        } else {
+            console.log('React and ReactDOM loaded successfully.');
+        }
+
+        const { useEffect, useId, useLayoutEffect, useRef } = React;
+
+        const ElectricBorder = ({ children, color = '#5227FF', speed = 1, chaos = 1, thickness = 2, className, style }) => {
+            const rawId = useId().replace(/[:]/g, '');
+            const filterId = `turbulent-displace-${rawId}`;
+            const svgRef = useRef(null);
+            const rootRef = useRef(null);
+            const strokeRef = useRef(null);
+
+            const updateAnim = () => {
+                try {
+                    const svg = svgRef.current;
+                    const host = rootRef.current;
+                    if (!svg || !host) {
+                        console.warn('ElectricBorder: SVG or host element not found.');
+                        return;
+                    }
+                    if (strokeRef.current) {
+                        strokeRef.current.style.filter = `url(#${filterId})`;
+                    }
+                    const width = Math.max(1, Math.round(host.clientWidth || host.getBoundingClientRect().width || 0));
+                    const height = Math.max(1, Math.round(host.clientHeight || host.getBoundingClientRect().height || 0));
+                    const dyAnims = Array.from(svg.querySelectorAll('feOffset > animate[attributeName="dy"]'));
+                    if (dyAnims.length >= 2) {
+                        dyAnims[0].setAttribute('values', `${height}; 0`);
+                        dyAnims[1].setAttribute('values', `0; -${height}`);
+                    }
+                    const dxAnims = Array.from(svg.querySelectorAll('feOffset > animate[attributeName="dx"]'));
+                    if (dxAnims.length >= 2) {
+                        dxAnims[0].setAttribute('values', `${width}; 0`);
+                        dxAnims[1].setAttribute('values', `0; -${width}`);
+                    }
+                    const baseDur = 6;
+                    const dur = Math.max(0.001, baseDur / (speed || 1));
+                    [...dyAnims, ...dxAnims].forEach(a => a.setAttribute('dur', `${dur}s`));
+                    const disp = svg.querySelector('feDisplacementMap');
+                    if (disp) disp.setAttribute('scale', String(30 * (chaos || 1)));
+                    const filterEl = svg.querySelector(`#${CSS.escape(filterId)}`);
+                    if (filterEl) {
+                        filterEl.setAttribute('x', '-200%');
+                        filterEl.setAttribute('y', '-200%');
+                        filterEl.setAttribute('width', '500%');
+                        filterEl.setAttribute('height', '500%');
+                    }
+                    requestAnimationFrame(() => {
+                        [...dyAnims, ...dxAnims].forEach(a => {
+                            if (typeof a.beginElement === 'function') {
+                                try {
+                                    a.beginElement();
+                                } catch (e) {
+                                    console.warn('ElectricBorder: beginElement failed, this may be due to a browser limitation.', e);
+                                }
+                            }
+                        });
+                    });
+                } catch (e) {
+                    console.error('ElectricBorder: Error in updateAnim', e);
+                }
+            };
+
+            useEffect(() => {
+                updateAnim();
+            }, [speed, chaos]);
+
+            useLayoutEffect(() => {
+                if (!rootRef.current) return;
+                const ro = new ResizeObserver(() => updateAnim());
+                ro.observe(rootRef.current);
+                updateAnim();
+                return () => ro.disconnect();
+            }, []);
+
+            const vars = {
+                ['--electric-border-color']: color,
+                ['--eb-border-width']: `${thickness}px`
+            };
+
+            return (
+                <div ref={rootRef} className={`electric-border ${className ?? ''}`} style={{ ...vars, ...style }}>
+                    <svg ref={svgRef} className="eb-svg" aria-hidden focusable="false">
+                        <defs>
+                            <filter id={filterId} colorInterpolationFilters="sRGB" x="-20%" y="-20%" width="140%" height="140%">
+                                <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="10" result="noise1" seed="1" />
+                                <feOffset in="noise1" dx="0" dy="0" result="offsetNoise1">
+                                    <animate attributeName="dy" values="700; 0" dur="6s" repeatCount="indefinite" calcMode="linear" />
+                                </feOffset>
+                                <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="10" result="noise2" seed="1" />
+                                <feOffset in="noise2" dx="0" dy="0" result="offsetNoise2">
+                                    <animate attributeName="dy" values="0; -700" dur="6s" repeatCount="indefinite" calcMode="linear" />
+                                </feOffset>
+                                <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="10" result="noise1" seed="2" />
+                                <feOffset in="noise1" dx="0" dy="0" result="offsetNoise3">
+                                    <animate attributeName="dx" values="490; 0" dur="6s" repeatCount="indefinite" calcMode="linear" />
+                                </feOffset>
+                                <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="10" result="noise2" seed="2" />
+                                <feOffset in="noise2" dx="0" dy="0" result="offsetNoise4">
+                                    <animate attributeName="dx" values="0; -490" dur="6s" repeatCount="indefinite" calcMode="linear" />
+                                </feOffset>
+                                <feComposite in="offsetNoise1" in2="offsetNoise2" result="part1" />
+                                <feComposite in="offsetNoise3" in2="offsetNoise4" result="part2" />
+                                <feBlend in="part1" in2="part2" mode="color-dodge" result="combinedNoise" />
+                                <feDisplacementMap
+                                    in="SourceGraphic"
+                                    in2="combinedNoise"
+                                    scale="30"
+                                    xChannelSelector="R"
+                                    yChannelSelector="B"
+                                />
+                            </filter>
+                        </defs>
+                    </svg>
+                    <div className="eb-layers">
+                        <div ref={strokeRef} className="eb-stroke" />
+                        <div className="eb-glow-1" />
+                        <div class="eb-glow-2" />
+                        <div className="eb-background-glow" />
+                    </div>
+                    <div className="eb-content">{children}</div>
+                </div>
+            );
+        };
+
+        const SessionCard = ({ title, description, image }) => {
+            try {
+                return (
+                    <ElectricBorder color="#FF5E00" thickness={3} className="session-card" style={{ backgroundImage: `url(${image})` }}>
+                        <div className="session-card-content">
+                            <h3>{title}</h3>
+                            <p>{description}</p>
+                            <a href="#book" className="book-button">Book Session</a>
+                        </div>
+                    </ElectricBorder>
+                );
+            } catch (e) {
+                console.error('SessionCard: Error rendering card', e);
+                return <div className="session-card">Error loading card: {title}</div>;
+            }
+        };
+
+        const SessionGrid = () => {
+            const sessions = [
+                {
+                    title: "Adventure Workshop",
+                    description: "Join our thrilling outdoor workshop to learn survival skills and team-building activities.",
+                    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
+                },
+                {
+                    title: "Wellness Retreat",
+                    description: "Experience a rejuvenating day of yoga, meditation, and wellness practices.",
+                    image: "https://images.unsplash.com/photo-1506126279646-a697353d3166?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
+                },
+                {
+                    title: "Mentorship Session",
+                    description: "Get personalized guidance from industry experts to boost your career.",
+                    image: "https://images.unsplash.com/photo-1516321310762-4794370e6a06?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
+                }
+            ];
+
+            try {
+                return (
+                    <div className="session-grid libreria">
+                        {sessions.map((session, index) => (
+                            <SessionCard
+                                key={index}
+                                title={session.title}
+                                description={session.description}
+                                image={session.image}
+                            />
+                        ))}
+                    </div>
+                );
+            } catch (e) {
+                console.error('SessionGrid: Error rendering grid', e);
+                return <div className="fallback-message">Error loading experiences. Please check the console.</div>;
+            }
+        };
+
+        // Render React components
+        document.addEventListener('DOMContentLoaded', () => {
+            const sessionGridElement = document.getElementById('session-grid');
+            if (sessionGridElement) {
+                try {
+                    ReactDOM.render(<SessionGrid />, sessionGridElement);
+                    console.log('SessionGrid rendered successfully.');
+                } catch (e) {
+                    console.error('Error rendering SessionGrid:', e);
+                }
+            } else {
+                console.error('Session grid element not found.');
+            }
+        });
+    </script>
+</body>
+</html>

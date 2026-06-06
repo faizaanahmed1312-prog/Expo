@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Login / Register - EAAP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <!-- Background Effects -->
+    <div class="grid-bg"></div>
+    <div class="shapes-container">
+        <div class="shape shape-circle"></div>
+        <div class="shape shape-triangle"></div>
+        <div class="shape shape-square"></div>
+    </div>
+    <div class="gradient-overlay"></div>
+    <div class="scanlines"></div>
+    <div id="particles"></div>
+
+    <!-- Sidebar Navigation -->
+    <nav id="sidebar" class="closed">
+        <div class="sidebar-container">
+            <div class="close-button" id="closeButton">
+                <span></span>
+                <span></span>
+            </div>
+            <div class="sidebar-logo">
+                <a href="index.html" class="logo-link">
+                    <svg class="logo-svg" viewBox="0 0 100 100">
+                        <path fill="#FF5E00" d="M50,10 L90,90 H10 Z" />
+                        <path fill="#00B2FF" d="M50,30 L70,70 H30 Z" />
+                    </svg>
+                    <span class="logo-text">EAAP</span>
+                </a>
+            </div>
+            <ul class="sidebar-links" id="sidebarLinks">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="explore.html" class="nav-link">Explore</a></li>
+                <li><a href="create-capsule.html" class="nav-link">Create</a></li>
+                <li><a href="register.html" class="nav-link">Register</a></li>
+                <li><a href="login.html" class="nav-link active">Login</a></li>
+                <li><a href="profile.html" class="nav-link">Profile</a></li>
+                <li><a href="ai-insights.html" class="nav-link">AI Insights</a></li>
+                <li><a href="about.html" class="nav-link">About</a></li>
+                <li><a href="contact.html" class="nav-link">Contact</a></li>
+                <li><a href="logout.html" class="nav-link">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Menu Toggle -->
+    <div class="menu-toggle" id="menuToggle">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <!-- Login Form -->
+            <div id="login-form" class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="text-center mb-4 glitch-text" data-text="Login">Login</h2>
+                        <div id="login-message" class="alert"></div>
+                        <form id="loginForm">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="password" required>
+                            </div>
+                            <button type="button" id="submitBtn" class="btn btn-primary w-100">
+                                <span class="spinner-border" role="status" aria-hidden="true"></span>
+                                Login
+                            </button>
+                            <p class="text-center mt-3">
+                                Don't have an account? <a href="#" id="show-register" class="text-decoration-none">Register here</a>
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Registration Stepper -->
+            <div id="register-form" class="col-md-6 d-none">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title text-center mb-4 glitch-text" data-text="Register">Register</h2>
+                        <div id="register-message" class="alert"></div>
+                        <!-- Stepper Navigation -->
+                        <div class="step-indicator-row">
+                            <div class="step-indicator active" data-step="1">
+                                <div class="step-indicator-inner active">
+                                    <span class="step-number">1</span>
+                                    <span class="active-dot d-none"></span>
+                                    <i class="fas fa-check check-icon d-none"></i>
+                                </div>
+                            </div>
+                            <div class="step-connector"><div class="step-connector-inner"></div></div>
+                            <div class="step-indicator" data-step="2">
+                                <div class="step-indicator-inner">
+                                    <span class="step-number">2</span>
+                                    <span class="active-dot d-none"></span>
+                                    <i class="fas fa-check check-icon d-none"></i>
+                                </div>
+                            </div>
+                            <div class="step-connector"><div class="step-connector-inner"></div></div>
+                            <div class="step-indicator" data-step="3">
+                                <div class="step-indicator-inner">
+                                    <span class="step-number">3</span>
+                                    <span class="active-dot d-none"></span>
+                                    <i class="fas fa-check check-icon d-none"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <form id="registerForm">
+                            <!-- Step 1: Basic Info -->
+                            <div class="step step-1 step-default">
+                                <div class="mb-3">
+                                    <label for="first_name" class="form-label">First Name</label>
+                                    <input type="text" class="form-control" id="first_name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="last_name" class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" id="last_name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="reg_email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="reg_email" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="reg_password" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="reg_password" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="confirm_password" class="form-label">Confirm Password</label>
+                                    <input type="password" class="form-control" id="confirm_password" required>
+                                </div>
+                                <div class="footer-container footer-nav end">
+                                    <button type="button" class="btn btn-primary w-100 next-step">Next</button>
+                                </div>
+                            </div>
+                            <!-- Step 2: Likes, Dislikes, Interests -->
+                            <div class="step step-2 step-default d-none">
+                                <div class="mb-3">
+                                    <label for="likes" class="form-label">Likes</label>
+                                    <textarea class="form-control" id="likes" rows="3" placeholder="What do you enjoy?"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="dislikes" class="form-label">Dislikes</label>
+                                    <textarea class="form-control" id="dislikes" rows="3" placeholder="What don't you like?"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="interests-input" class="form-label">Interests</label>
+                                    <input type="text" class="form-control" id="interests-input" readonly>
+                                    <div class="interests-container mt-2">
+                                        <button type="button" class="interest-box" data-interest="Adventure">+ Adventure</button>
+                                        <button type="button" class="interest-box" data-interest="Technology">+ Technology</button>
+                                        <button type="button" class="interest-box" data-interest="Music">+ Music</button>
+                                        <button type="button" class="interest-box" data-interest="Travel">+ Travel</button>
+                                        <button type="button" class="interest-box" data-interest="Art">+ Art</button>
+                                        <button type="button" class="interest-box" data-interest="Food">+ Food</button>
+                                        <button type="button" class="interest-box" data-interest="Sports">+ Sports</button>
+                                        <button type="button" class="interest-box" data-interest="Gaming">+ Gaming</button>
+                                        <button type="button" class="interest-box" data-interest="Reading">+ Reading</button>
+                                        <button type="button" class="interest-box" data-interest="Photography">+ Photography</button>
+                                        <button type="button" class="interest-box" data-interest="Nature">+ Nature</button>
+                                        <button type="button" class="interest-box" data-interest="Fitness">+ Fitness</button>
+                                        <button type="button" class="interest-box" data-interest="Fashion">+ Fashion</button>
+                                        <button type="button" class="interest-box" data-interest="Cooking">+ Cooking</button>
+                                        <button type="button" class="interest-box" data-interest="Movies">+ Movies</button>
+                                    </div>
+                                </div>
+                                <div class="footer-container footer-nav spread">
+                                    <button type="button" class="btn btn-outline-primary w-100 prev-step">Previous</button>
+                                    <button type="button" class="btn btn-primary w-100 next-step">Next</button>
+                                </div>
+                            </div>
+                            <!-- Step 3: About and Location -->
+                            <div class="step step-3 step-default d-none">
+                                <div class="mb-3">
+                                    <label for="about" class="form-label">About Yourself</label>
+                                    <textarea class="form-control" id="about" rows="3" placeholder="Tell us about yourself" required></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="country" class="form-label">Country</label>
+                                    <select class="form-control" id="country" required>
+                                        <option value="">Select Country</option>
+                                        <option value="USA">USA</option>
+                                        <option value="India">India</option>
+                                        <option value="UK">UK</option>
+                                        <option value="Canada">Canada</option>
+                                        <option value="Australia">Australia</option>
+                                        <option value="Germany">Germany</option>
+                                        <option value="Japan">Japan</option>
+                                        <option value="Brazil">Brazil</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="city" class="form-label">City</label>
+                                    <input type="text" class="form-control" id="city" placeholder="Enter your city" required>
+                                </div>
+                                <div class="footer-container footer-nav spread">
+                                    <button type="button" class="btn btn-outline-primary w-100 prev-step">Previous</button>
+                                    <button type="submit" class="btn btn-primary w-100">Register</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Add version to prevent caching
+        const version = '1.0.1';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setupSidebar();
+            setupAuthForms();
+        });
+
+        function setupSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('menuToggle');
+            const closeButton = document.getElementById('closeButton');
+
+            if (!sidebar || !menuToggle || !closeButton) {
+                console.error('Sidebar elements not found:', { sidebar, menuToggle, closeButton });
+                return;
+            }
+
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('open');
+                sidebar.classList.toggle('closed');
+                menuToggle.classList.toggle('active');
+            });
+
+            closeButton.addEventListener('click', () => {
+                sidebar.classList.remove('open');
+                sidebar.classList.add('closed');
+                menuToggle.classList.remove('active');
+            });
+        }
+
+        function setupAuthForms() {
+            const loginMessageDiv = document.getElementById('login-message');
+            const registerMessageDiv = document.getElementById('register-message');
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const showRegister = document.getElementById('show-register');
+            const loginSection = document.getElementById('login-form');
+            const registerSection = document.getElementById('register-form');
+            const submitButton = document.getElementById('submitBtn');
+            const spinner = submitButton.querySelector('.spinner-border');
+            const steps = document.querySelectorAll('.step');
+            const nextButtons = document.querySelectorAll('.next-step');
+            const prevButtons = document.querySelectorAll('.prev-step');
+            const stepIndicators = document.querySelectorAll('.step-indicator');
+            const interestsInput = document.getElementById('interests-input');
+            const interestBoxes = document.querySelectorAll('.interest-box');
+            let currentStep = 1;
+
+            // Force reload if cached version
+            if (window.location.href.indexOf('v=') === -1) {
+                window.location.href = window.location.href + (window.location.href.indexOf('?') === -1 ? '?' : '&') + 'v=' + version;
+                return;
+            }
+
+            // Update step indicators
+            function updateStepIndicators(step) {
+                stepIndicators.forEach(indicator => {
+                    const stepNum = parseInt(indicator.getAttribute('data-step'));
+                    const inner = indicator.querySelector('.step-indicator-inner');
+                    const number = inner.querySelector('.step-number');
+                    const dot = inner.querySelector('.active-dot');
+                    const check = inner.querySelector('.check-icon');
+                    const connector = indicator.nextElementSibling?.querySelector('.step-connector-inner');
+
+                    if (stepNum < step) {
+                        inner.classList.add('completed');
+                        inner.classList.remove('active');
+                        number.classList.add('d-none');
+                        dot.classList.add('d-none');
+                        check.classList.remove('d-none');
+                        if (connector) connector.style.width = '100%';
+                    } else if (stepNum === step) {
+                        inner.classList.add('active');
+                        inner.classList.remove('completed');
+                        number.classList.remove('d-none');
+                        dot.classList.remove('d-none');
+                        check.classList.add('d-none');
+                        if (connector) connector.style.width = '0%';
+                    } else {
+                        inner.classList.remove('active', 'completed');
+                        number.classList.remove('d-none');
+                        dot.classList.add('d-none');
+                        check.classList.add('d-none');
+                        if (connector) connector.style.width = '0%';
+                    }
+                });
+            }
+
+            // Handle interests selection
+            interestBoxes.forEach(box => {
+                box.addEventListener('click', () => {
+                    const interest = box.getAttribute('data-interest');
+                    let currentInterests = interestsInput.value ? interestsInput.value.split(', ').filter(i => i) : [];
+                    if (!currentInterests.includes(interest)) {
+                        currentInterests.push(interest);
+                        interestsInput.value = currentInterests.join(', ');
+                        box.classList.add('selected');
+                    }
+                });
+            });
+
+            // Toggle between login and register forms
+            showRegister.addEventListener('click', (e) => {
+                e.preventDefault();
+                loginSection.classList.add('d-none');
+                registerSection.classList.remove('d-none');
+                currentStep = 1;
+                updateStepIndicators(1);
+                registerMessageDiv.style.display = 'none';
+            });
+
+            // Handle stepper navigation
+            nextButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    if (currentStep < 3) {
+                        if (currentStep === 1) {
+                            const password = document.getElementById('reg_password').value;
+                            const confirmPassword = document.getElementById('confirm_password').value;
+                            if (password !== confirmPassword) {
+                                registerMessageDiv.className = 'alert alert-danger';
+                                registerMessageDiv.textContent = 'Passwords do not match!';
+                                registerMessageDiv.style.display = 'block';
+                                return;
+                            }
+                        }
+                        steps[currentStep - 1].classList.add('d-none');
+                        steps[currentStep].classList.remove('d-none');
+                        currentStep++;
+                        updateStepIndicators(currentStep);
+                        registerMessageDiv.style.display = 'none';
+                    }
+                });
+            });
+
+            prevButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    if (currentStep > 1) {
+                        steps[currentStep - 1].classList.add('d-none');
+                        steps[currentStep - 2].classList.remove('d-none');
+                        currentStep--;
+                        updateStepIndicators(currentStep);
+                        registerMessageDiv.style.display = 'none';
+                    }
+                });
+            });
+
+            // Login form submission
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (submitButton.disabled) return;
+
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                if (!email || !password) {
+                    loginMessageDiv.className = 'alert alert-danger';
+                    loginMessageDiv.textContent = 'Please fill in all fields';
+                    loginMessageDiv.style.display = 'block';
+                    return;
+                }
+
+                submitButton.disabled = true;
+                spinner.style.display = 'inline-block';
+                submitButton.textContent = 'Logging in...';
+
+                try {
+                    const response = await fetch('login.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, password }),
+                        credentials: 'include'
+                    });
+
+                    const data = await response.json();
+                    if (data.success) {
+                        loginMessageDiv.className = 'alert alert-success';
+                        loginMessageDiv.textContent = 'Login successful! Redirecting...';
+                        loginMessageDiv.style.display = 'block';
+                        setTimeout(() => {
+                            window.location.href = 'index.html';
+                        }, 1500);
+                    } else {
+                        loginMessageDiv.className = 'alert alert-danger';
+                        loginMessageDiv.textContent = data.message || 'Login failed. Please try again.';
+                        loginMessageDiv.style.display = 'block';
+                    }
+                } catch (error) {
+                    console.error('Login error:', error);
+                    loginMessageDiv.className = 'alert alert-danger';
+                    loginMessageDiv.textContent = 'An error occurred. Please try again.';
+                    loginMessageDiv.style.display = 'block';
+                } finally {
+                    submitButton.disabled = false;
+                    spinner.style.display = 'none';
+                    submitButton.textContent = 'Login';
+                }
+            });
+
+            // Register form submission
+            registerForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const submitButton = registerForm.querySelector('button[type="submit"]');
+                if (submitButton.disabled) return;
+
+                const formData = {
+                    first_name: document.getElementById('first_name').value,
+                    last_name: document.getElementById('last_name').value,
+                    email: document.getElementById('reg_email').value,
+                    password: document.getElementById('reg_password').value,
+                    likes: document.getElementById('likes').value,
+                    dislikes: document.getElementById('dislikes').value,
+                    interests: interestsInput.value ? interestsInput.value.split(', ').filter(i => i) : [],
+                    about: document.getElementById('about').value,
+                    country: document.getElementById('country').value,
+                    city: document.getElementById('city').value
+                };
+
+                if (!formData.first_name || !formData.last_name || !formData.email || !formData.password || !formData.about || !formData.country || !formData.city) {
+                    registerMessageDiv.className = 'alert alert-danger';
+                    registerMessageDiv.textContent = 'Please fill in all required fields';
+                    registerMessageDiv.style.display = 'block';
+                    return;
+                }
+
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<span class="spinner-border" role="status" aria-hidden="true"></span> Registering...';
+
+                try {
+                    const response = await fetch('register.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(formData),
+                        credentials: 'include'
+                    });
+
+                    const data = await response.json();
+                    if (data.success) {
+                        registerMessageDiv.className = 'alert alert-success';
+                        registerMessageDiv.textContent = 'Registration successful! Redirecting...';
+                        registerMessageDiv.style.display = 'block';
+                        setTimeout(() => {
+                            window.location.href = 'index.html';
+                        }, 1500);
+                    } else {
+                        registerMessageDiv.className = 'alert alert-danger';
+                        registerMessageDiv.textContent = data.message || 'Registration failed. Please try again.';
+                        registerMessageDiv.style.display = 'block';
+                    }
+                } catch (error) {
+                    console.error('Registration error:', error);
+                    registerMessageDiv.className = 'alert alert-danger';
+                    registerMessageDiv.textContent = 'An error occurred. Please try again.';
+                    registerMessageDiv.style.display = 'block';
+                } finally {
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = 'Register';
+                }
+            });
+
+            // Initialize step indicators
+            updateStepIndicators(1);
+        };
+    </script>
+</body>
+</html>

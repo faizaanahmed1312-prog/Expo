@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - EaaP Marketplace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+    <div class="grid-bg"></div>
+    <div class="shapes-container">
+        <div class="shape shape-circle"></div>
+        <div class="shape shape-triangle"></div>
+        <div class="shape shape-square"></div>
+    </div>
+    <div class="gradient-overlay"></div>
+    <div class="scanlines"></div>
+    <div id="particles"></div>
+
+    <nav id="sidebar" class="closed">
+        <div class="sidebar-container">
+            <div class="close-button" id="closeButton">
+                <span></span>
+                <span></span>
+            </div>
+            <div class="sidebar-logo">
+                <a href="index.html" class="logo-link">
+                    <svg class="logo-svg" viewBox="0 0 100 100">
+                        <path fill="#FF5E00" d="M50,10 L90,90 H10 Z" />
+                        <path fill="#00B2FF" d="M50,30 L70,70 H30 Z" />
+                    </svg>
+                    <span class="logo-text">EaaP Marketplace</span>
+                </a>
+            </div>
+            <ul class="sidebar-links" id="sidebarLinks">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="experience.html" class="nav-link">Experiences</a></li>
+                <li><a href="create.html" class="nav-link">Add Experience</a></li>
+                <li><a href="" class="nav-link">AI Insights</a></li>
+                <li><a href="profile.html" class="nav-link active">Profile</a></li>
+                <li><a href="index.html" class="nav-link">About</a></li>
+                <li><a href="index.html" class="nav-link">Contact</a></li>
+                <li><a href="" class="nav-link">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="menu-toggle" id="menuToggle">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <main class="container my-5">
+        <div class="profile-header">
+            <img src="profile.jpeg" alt="Profile Picture" class="profile-avatar" id="profile-image">
+            <div class="profile-info">
+                <h2 class="glitch-text username-badge" id="username" data-text="Username">Username</h2>
+                <p id="email">email@example.com</p>
+                <div class="profile-stats">
+                    <div class="profile-stat">
+                        <div class="profile-stat-value" id="capsule-count">0</div>
+                        <div class="profile-stat-label">Experiences</div>
+                    </div>
+                    <div class="profile-stat">
+                        <div class="profile-stat-value" id="group-count">0</div>
+                        <div class="profile-stat-label">Groups</div>
+                    </div>
+                    <div class="profile-stat">
+                        <div class="profile-stat-value" id="contribution-count">0</div>
+                        <div class="profile-stat-label">Contributions</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h3 class="card-title glitch-text" data-text="My Experiences">My Experiences</h3>
+                            <a href="create-capsule.html" class="btn btn-sm btn-primary">
+                                <i class="fas fa-plus me-1"></i> Create New
+                            </a>
+                        </div>
+                        <div id="my-capsules" class="list-group">
+                            <!-- Capsules will be loaded here dynamically -->
+                            <div class="text-center py-4">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h3 class="card-title glitch-text" data-text="My Groups">My Groups</h3>
+                            <a href="groups.html" class="btn btn-sm btn-primary">
+                                <i class="fas fa-users me-1"></i> View All
+                            </a>
+                        </div>
+                        <div id="my-groups" class="list-group">
+                            <!-- Groups will be loaded here dynamically -->
+                            <div class="text-center py-4">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title glitch-text mb-4" data-text="Account Settings">Account Settings</h3>
+                        <form id="profile-form">
+                            <div class="mb-3">
+                                <label for="update-username" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="update-username">
+                            </div>
+                            <div class="mb-3">
+                                <label for="update-email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="update-email">
+                            </div>
+                            <div class="mb-3">
+                                <label for="update-password" class="form-label">New Password (leave blank to keep current)</label>
+                                <input type="password" class="form-control" id="update-password">
+                            </div>
+                            <div class="mb-3">
+                                <label for="profile-picture" class="form-label">Profile Picture</label>
+                                <input type="file" class="form-control" id="profile-picture">
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="update-profile-btn">Update Profile</button>
+                            <button type="button" class="btn btn-danger ms-2" id="logout-btn">Logout</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="py-4 text-center">
+        <div class="container">
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Careers</a>
+            </div>
+            <div class="copyright">
+                © 2025 EaaP Marketplace. All rights reserved. Built for unforgettable moments.
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Sidebar toggle functionality
+        const sidebar = document.getElementById('sidebar');
+        const menuToggle = document.getElementById('menuToggle');
+        const closeButton = document.getElementById('closeButton');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('closed');
+            document.querySelector('.main-content').classList.toggle('sidebar-open');
+            document.querySelector('.main-content').classList.toggle('sidebar-closed');
+            menuToggle.classList.toggle('active');
+        });
+
+        closeButton.addEventListener('click', () => {
+            sidebar.classList.add('closed');
+            document.querySelector('.main-content').classList.remove('sidebar-open');
+            document.querySelector('.main-content').classList.add('sidebar-closed');
+            menuToggle.classList.remove('active');
+        });
+    </script>
+</body>
+</html>

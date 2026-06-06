@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Experiences - EaaP Marketplace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="experience.css">
+</head>
+<body>
+    <!-- Background Effects -->
+    <div class="grid-bg"></div>
+    <div class="shapes-container">
+        <div class="shape shape-circle"></div>
+        <div class="shape shape-triangle"></div>
+        <div class="shape shape-square"></div>
+    </div>
+    <div class="gradient-overlay"></div>
+    <div class="scanlines"></div>
+    <div id="particles"></div>
+
+    <!-- Sidebar Navigation -->
+    <nav id="sidebar" class="closed">
+        <div class="sidebar-container">
+            <div class="close-button" id="closeButton">
+                <span></span>
+                <span></span>
+            </div>
+            <div class="sidebar-logo">
+                <a href="index.html" class="logo-link">
+                    <svg class="logo-svg" viewBox="0 0 100 100">
+                        <path fill="#FF5E00" d="M50,10 L90,90 H10 Z" />
+                        <path fill="#00B2FF" d="M50,30 L70,70 H30 Z" />
+                    </svg>
+                    <span class="logo-text">EaaP Marketplace</span>
+                </a>
+            </div>
+            <ul class="sidebar-links" id="sidebarLinks">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="experience.html" class="nav-link">Experiences</a></li>
+                <li><a href="create.html" class="nav-link">Add Experience</a></li>
+                <li><a href="" class="nav-link">AI Insights</a></li>
+                <li><a href="profile.html" class="nav-link active">Profile</a></li>
+                <li><a href="index.html" class="nav-link">About</a></li>
+                <li><a href="index.html" class="nav-link">Contact</a></li>
+                <li><a href="" class="nav-link">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Menu Toggle -->
+    <div class="menu-toggle" id="menuToggle">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content sidebar-closed container-fluid my-5">
+        <h1 class="text-center mb-4 glitch-text" data-text="Explore Experiences">Explore Experiences</h1>
+
+        <!-- Experience Count -->
+        <div class="capsule-count mb-4" id="capsule-count">Loading experiences...</div>
+
+        <!-- Filters -->
+        <div class="filter-container mb-4">
+            <div class="row justify-content-center">
+                <div class="col-lg-6 col-md-8 mb-3">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search experiences..." id="search-input">
+                        <button class="btn btn-primary" id="search-btn">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 mb-3">
+                    <select class="form-select" id="sort-select">
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="name">Name (A-Z)</option>
+                        <option value="name">AI suggested for me</option>
+                    </select>
+                </div>
+                <div class="col-lg-3 col-md-4 mb-3">
+                    <div class="capsule-type-filter btn-group w-100">
+                        <button type="button" class="btn btn-outline-primary active" data-filter="all">All</button>
+                        <button type="button" class="btn btn-outline-primary" data-filter="individual">Individual</button>
+                        <button type="button" class="btn btn-outline-primary" data-filter="group">Group</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Experiences Container -->
+        <div class="row justify-content-center" id="capsules-container">
+            <!-- Experiences will be loaded here dynamically -->
+            <div class="col-12 text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- No Results Message -->
+        <div class="no-results d-none" id="no-results">
+            <div class="text-center py-5">
+                <i class="fas fa-search fa-3x mb-3"></i>
+                <h3>No experiences found</h3>
+                <p>Try adjusting your search or filters</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-4 text-center">
+        <div class="container">
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Careers</a>
+            </div>
+            <div class="copyright">
+                © 2025 EaaP Marketplace. All rights reserved. Built for unforgettable moments.
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Store all experiences for filtering
+        let allCapsules = [];
+
+        // Load experiences when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCapsules();
+            setupEventListeners();
+            setupSidebar();
+        });
+
+        // Set up event listeners for search and filters
+        function setupEventListeners() {
+            // Search button
+            document.getElementById('search-btn').addEventListener('click', function() {
+                filterCapsules();
+            });
+
+            // Search input (search as you type)
+            document.getElementById('search-input').addEventListener('input', function() {
+                filterCapsules();
+            });
+
+            // Sort select
+            document.getElementById('sort-select').addEventListener('change', function() {
+                filterCapsules();
+            });
+
+            // Capsule type filter buttons
+            document.querySelectorAll('.capsule-type-filter .btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('.capsule-type-filter .btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    filterCapsules();
+                });
+            });
+        }
+
+        // Set up sidebar toggle functionality
+        function setupSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('menuToggle');
+            const closeButton = document.getElementById('closeButton');
+            const mainContent = document.querySelector('.main-content');
+
+            if (!sidebar || !menuToggle || !closeButton) {
+                console.error('Sidebar elements not found:', { sidebar, menuToggle, closeButton });
+                return;
+            }
+
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('open');
+                sidebar.classList.toggle('closed');
+                mainContent.classList.toggle('sidebar-open');
+                mainContent.classList.toggle('sidebar-closed');
+                menuToggle.classList.toggle('active');
+                console.log('Menu toggle clicked, sidebar open:', sidebar.classList.contains('open'));
+            });
+
+            closeButton.addEventListener('click', () => {
+                sidebar.classList.remove('open');
+                sidebar.classList.add('closed');
+                mainContent.classList.remove('sidebar-open');
+                mainContent.classList.add('sidebar-closed');
+                menuToggle.classList.remove('active');
+                console.log('Close button clicked, sidebar closed');
+            });
+
+            console.log('Sidebar event listeners set up successfully');
+        }
+
+        // Load experiences from server
+        async function loadCapsules() {
+            try {
+                const response = await fetch('fetch-experiences.php', {
+                    credentials: 'include'
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    allCapsules = data.capsules;
+                    document.getElementById('capsule-count').textContent = `${data.count} Experiences Found`;
+                    displayCapsules(data.capsules);
+                } else {
+                    throw new Error(data.message || 'Error loading experiences');
+                }
+            } catch (error) {
+                console.error('Error loading experiences:', error);
+                document.getElementById('capsules-container').innerHTML = `
+                    <div class="col-12">
+                        <div class="alert alert-danger">
+                            Error loading experiences: ${error.message}. Please try again later.
+                        </div>
+                    </div>
+                `;
+                document.getElementById('capsule-count').textContent = 'Error loading experiences';
+            }
+        }
+
+        // Filter experiences based on search, sort, and type filters
+        function filterCapsules() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const sortBy = document.getElementById('sort-select').value;
+            const activeFilterBtn = document.querySelector('.capsule-type-filter .btn.active');
+            const filterType = activeFilterBtn ? activeFilterBtn.getAttribute('data-filter') : 'all';
+
+            let filteredCapsules = allCapsules.filter(capsule => {
+                const matchesSearch = searchTerm === '' ||
+                    capsule.name.toLowerCase().includes(searchTerm) ||
+                    capsule.description.toLowerCase().includes(searchTerm) ||
+                    capsule.creator.toLowerCase().includes(searchTerm);
+
+                const matchesType = filterType === 'all' ||
+                    (filterType === 'group' && capsule.is_group_capsule) ||
+                    (filterType === 'individual' && !capsule.is_group_capsule);
+
+                return matchesSearch && matchesType;
+            });
+
+            filteredCapsules.sort((a, b) => {
+                switch (sortBy) {
+                    case 'newest':
+                        return new Date(b.created_at || b.open_date) - new Date(a.created_at || a.open_date);
+                    case 'oldest':
+                        return new Date(a.created_at || a.open_date) - new Date(b.created_at || a.open_date);
+                    case 'name':
+                        return a.name.localeCompare(b.name);
+                    default:
+                        return 0;
+                }
+            });
+
+            displayCapsules(filteredCapsules);
+        }
+
+        // Display experiences in the container
+        function displayCapsules(capsules) {
+            const container = document.getElementById('capsules-container');
+            const noResults = document.getElementById('no-results');
+
+            container.innerHTML = '';
+
+            if (capsules.length === 0) {
+                container.classList.add('d-none');
+                noResults.classList.remove('d-none');
+                return;
+            } else {
+                container.classList.remove('d-none');
+                noResults.classList.add('d-none');
+            }
+
+            capsules.forEach(capsule => {
+                const capsuleCard = displayCapsule(capsule);
+                container.appendChild(capsuleCard);
+            });
+
+            document.querySelectorAll('.view-capsule').forEach(button => {
+                button.addEventListener('click', function() {
+                    const capsuleId = this.getAttribute('data-capsule-id');
+                    window.location.href = `view-experience.html?id=${capsuleId}`;
+                });
+            });
+        }
+
+        // Create individual experience card
+        function displayCapsule(capsule) {
+            const capsuleCard = document.createElement('div');
+            capsuleCard.className = 'col-lg-3 col-md-4 col-sm-6 mb-4';
+
+            const createdDate = new Date(capsule.created_at).toLocaleDateString();
+            const openDate = new Date(capsule.open_date).toLocaleDateString();
+
+            const isGroupDeleted = capsule.is_group_capsule && !capsule.group_name;
+
+            let groupBadge = '';
+            if (capsule.is_group_capsule) {
+                if (isGroupDeleted) {
+                    groupBadge = `<span class="badge me-2"><i class="fas fa-users me-1"></i> Deleted Group</span>`;
+                } else {
+                    groupBadge = `<span class="badge me-2"><i class="fas fa-users me-1"></i> ${capsule.group_name}</span>`;
+                }
+            }
+
+            let tagsBadges = '';
+            if (capsule.tags && capsule.tags.length > 0) {
+                tagsBadges = capsule.tags.map(tag =>
+                    `<span class="badge bg-secondary me-1">${tag}</span>`
+                ).join('');
+            }
+
+            capsuleCard.innerHTML = `
+                <div class="card capsule-card h-100">
+                    ${capsule.image_path ?
+                        `<img src="${capsule.image_path}" class="card-img-top" alt="${capsule.name}" style="height: 200px; object-fit: cover;">` :
+                        `<div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                            <i class="fas fa-box-archive fa-3x text-muted"></i>
+                        </div>`
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title glitch-text" data-text="${capsule.name}">${capsule.name}</h5>
+                        <p class="card-text">${capsule.description || 'No description'}</p>
+                        <div class="mb-2">
+                            ${groupBadge}
+                            ${tagsBadges}
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">By: ${capsule.creator}</small>
+                            <small class="text-muted">Opens: ${openDate}</small>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="view-experience.html?id=${capsule.id}" class="btn btn-outline-primary w-100 view-capsule" data-capsule-id="${capsule.id}">View Details</a>
+                    </div>
+                </div>
+            `;
+
+            return capsuleCard;
+        }
+    </script>
+</body>
+</html>
